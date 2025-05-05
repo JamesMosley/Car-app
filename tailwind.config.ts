@@ -59,7 +59,17 @@ export default {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+            // Added for vehicle status indicators
+            green: {
+                '500': '#22c55e', // Example green
+            },
+            blue: {
+                '500': '#3b82f6', // Example blue
+            },
+            orange: {
+                '500': '#f97316', // Example orange
+            },
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -92,3 +102,4 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

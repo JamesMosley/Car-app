@@ -1,7 +1,12 @@
+
+"use client" // Required for recharts client components
+
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, Truck, FileText, Archive, CreditCard, ArrowRight, BarChart } from 'lucide-react';
+import { Bar, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
 
 const sections = [
   { href: '/vehicles', title: 'Vehicles', description: 'Manage your fleet vehicles.', icon: Truck },
@@ -9,6 +14,32 @@ const sections = [
   { href: '/inventory', title: 'Inventory', description: 'Keep track of parts and stock.', icon: Archive },
   { href: '/payments', title: 'Payments', description: 'Monitor and record payments.', icon: CreditCard },
 ];
+
+// Placeholder data for Monthly Revenue
+const monthlyRevenueData = [
+  { month: 'Jan', revenue: 4000 },
+  { month: 'Feb', revenue: 3000 },
+  { month: 'Mar', revenue: 5000 },
+  { month: 'Apr', revenue: 4500 },
+  { month: 'May', revenue: 6000 },
+  { month: 'Jun', revenue: 5500 },
+  { month: 'Jul', revenue: 7000 },
+  // Add more months as needed
+];
+
+const chartConfig: ChartConfig = {
+  revenue: {
+    label: "Revenue",
+    color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
+
+// Placeholder data for Vehicle Status
+const vehicleStatusData = {
+  completed: 15,
+  inProgress: 5,
+  pending: 3,
+};
 
 export default function DashboardPage() {
   return (
@@ -42,15 +73,84 @@ export default function DashboardPage() {
         ))}
       </div>
 
-        {/* Placeholder for future charts or summaries */}
+        {/* New Sections: Monthly Revenue and Vehicle Status */}
+       <div className="grid gap-4 md:grid-cols-2">
+           {/* Monthly Revenue Chart */}
+           <Card>
+              <CardHeader>
+                <CardTitle>Monthly Revenue</CardTitle>
+                <CardDescription>Overview of revenue generated per month.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height={200}>
+                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                          <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                          <XAxis
+                            dataKey="month"
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                          />
+                          <YAxis tickLine={false} axisLine={false} tickMargin={10} />
+                           <ChartTooltip
+                             cursor={false}
+                             content={<ChartTooltipContent hideLabel />}
+                           />
+                          <Bar
+                             dataKey="revenue"
+                             fill="var(--color-revenue)"
+                             radius={4}
+                             activeBar={<Rectangle fillOpacity={0.8} />}
+                          />
+                      </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </CardContent>
+           </Card>
+
+           {/* Vehicle Status Summary */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Vehicle Status</CardTitle>
+                    <CardDescription>Current status distribution of vehicles.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                           <span className="h-3 w-3 rounded-full bg-green-500"></span>
+                           <span>Completed</span>
+                        </div>
+                        <span className="font-medium">{vehicleStatusData.completed}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                         <div className="flex items-center gap-2">
+                           <span className="h-3 w-3 rounded-full bg-blue-500"></span>
+                           <span>In Progress</span>
+                         </div>
+                         <span className="font-medium">{vehicleStatusData.inProgress}</span>
+                    </div>
+                     <div className="flex items-center justify-between">
+                         <div className="flex items-center gap-2">
+                           <span className="h-3 w-3 rounded-full bg-orange-500"></span>
+                           <span>Pending</span>
+                         </div>
+                         <span className="font-medium">{vehicleStatusData.pending}</span>
+                    </div>
+                </CardContent>
+            </Card>
+       </div>
+
+        {/* Placeholder for other summaries */}
        <Card className="mt-4">
           <CardHeader>
             <CardTitle>Fleet Overview</CardTitle>
-            <CardDescription>Summary statistics and charts will appear here.</CardDescription>
+            <CardDescription>Additional summary statistics will appear here.</CardDescription>
           </CardHeader>
           <CardContent>
              <div className="flex items-center justify-center h-40 bg-secondary rounded-md">
-                <p className="text-muted-foreground">Chart Placeholder</p>
+                <p className="text-muted-foreground">Placeholder</p>
              </div>
           </CardContent>
        </Card>
@@ -58,3 +158,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
