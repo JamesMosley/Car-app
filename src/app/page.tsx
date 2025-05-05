@@ -4,8 +4,8 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Truck, FileText, Archive, CreditCard, ArrowRight, BarChart } from 'lucide-react';
-import { Bar, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { LayoutDashboard, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react';
+import { Bar, BarChart, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid } from 'recharts'; // Import BarChart here, removed Tooltip
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
 
 const sections = [
@@ -119,6 +119,7 @@ export default function DashboardPage() {
                 <CardContent className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
+                           {/* Use Tailwind classes directly for background colors */}
                            <span className="h-3 w-3 rounded-full bg-green-500"></span>
                            <span>Completed</span>
                         </div>
@@ -158,4 +159,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
