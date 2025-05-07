@@ -36,7 +36,7 @@ const chartConfig: ChartConfig = {
 
 // Placeholder data for Vehicle Status
 const vehicleStatusData = {
-  completed: 15,
+  completed: 10,
   inProgress: 5,
   pending: 3,
   total: 15 + 5 + 3, // Calculate total for percentages
