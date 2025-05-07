@@ -8,14 +8,14 @@ body {
 
 @layer base {
   :root {
-    /* Teal Theme */
+    /* Blue Theme */
     --background: 0 0% 100%; /* White */
     --foreground: 0 0% 3.9%; /* Near Black */
     --card: 0 0% 100%; /* White */
     --card-foreground: 0 0% 3.9%; /* Near Black */
     --popover: 0 0% 100%; /* White */
     --popover-foreground: 0 0% 3.9%; /* Near Black */
-    --primary: 180 100% 25%; /* Teal (#008080) */
+    --primary: 220 100% 50%; /* Vibrant Blue */
     --primary-foreground: 0 0% 100%; /* White */
     --secondary: 0 0% 94.1%; /* Light Gray (#F0F0F0) */
     --secondary-foreground: 0 0% 9%; /* Near Black */
@@ -27,36 +27,36 @@ body {
     --destructive-foreground: 0 0% 98%; /* White */
     --border: 0 0% 89.8%; /* Lighter Gray */
     --input: 0 0% 89.8%; /* Lighter Gray */
-    --ring: 51 100% 50%; /* Gold (#FFD700) */
+    --ring: 220 100% 50%; /* Vibrant Blue for ring to match primary */
 
-    /* Charts - Using Gold and Teal shades */
-    --chart-1: 51 100% 50%; /* Gold */
-    --chart-2: 180 70% 35%; /* Darker Teal */
-    --chart-3: 180 50% 55%; /* Lighter Teal */
-    --chart-4: 51 80% 60%; /* Lighter Gold */
-    --chart-5: 180 90% 20%; /* Darkest Teal */
+    /* Charts - Primary chart elements will now use the blue from --primary via chartConfig */
+    --chart-1: 51 100% 50%; /* Gold - kept for potential other chart elements */
+    --chart-2: 180 70% 35%; /* Darker Teal - kept for potential other chart elements */
+    --chart-3: 180 50% 55%; /* Lighter Teal - kept for potential other chart elements */
+    --chart-4: 51 80% 60%; /* Lighter Gold - kept for potential other chart elements */
+    --chart-5: 180 90% 20%; /* Darkest Teal - kept for potential other chart elements */
 
     --radius: 0.5rem;
 
     /* Sidebar specific theme */
     --sidebar-background: 0 0% 98%; /* Very Light Gray */
     --sidebar-foreground: 0 0% 20%; /* Dark Gray */
-    --sidebar-primary: 180 100% 25%; /* Teal */
+    --sidebar-primary: 220 100% 50%; /* Vibrant Blue */
     --sidebar-primary-foreground: 0 0% 100%; /* White */
     --sidebar-accent: 0 0% 92%; /* Slightly darker Light Gray */
     --sidebar-accent-foreground: 0 0% 9%; /* Near Black */
     --sidebar-border: 0 0% 85%; /* Medium Gray */
-    --sidebar-ring: 51 100% 50%; /* Gold */
+    --sidebar-ring: 220 100% 50%; /* Vibrant Blue */
   }
   .dark {
-    /* Dark Teal Theme */
+    /* Dark Blue Theme */
     --background: 210 10% 15%; /* Dark Blue-Gray */
     --foreground: 0 0% 98%; /* Near White */
     --card: 210 10% 18%; /* Slightly Lighter Dark Blue-Gray */
     --card-foreground: 0 0% 98%; /* Near White */
     --popover: 210 10% 15%; /* Dark Blue-Gray */
     --popover-foreground: 0 0% 98%; /* Near White */
-    --primary: 180 80% 40%; /* Brighter Teal */
+    --primary: 220 90% 60%; /* Brighter Blue */
     --primary-foreground: 0 0% 10%; /* Near Black */
     --secondary: 210 10% 25%; /* Medium Dark Gray */
     --secondary-foreground: 0 0% 98%; /* Near White */
@@ -68,24 +68,24 @@ body {
     --destructive-foreground: 0 0% 98%; /* Near White */
     --border: 210 10% 30%; /* Slightly Lighter Medium Dark Gray */
     --input: 210 10% 30%; /* Slightly Lighter Medium Dark Gray */
-    --ring: 51 100% 60%; /* Brighter Gold */
+    --ring: 220 90% 60%; /* Brighter Blue for ring */
 
-    /* Charts - Using Gold and Teal shades */
-    --chart-1: 51 100% 60%; /* Brighter Gold */
-    --chart-2: 180 70% 50%; /* Brighter Teal */
-    --chart-3: 180 50% 70%; /* Lighter Teal */
-    --chart-4: 51 80% 70%; /* Lighter Gold */
-    --chart-5: 180 90% 30%; /* Darker Teal */
+    /* Charts - Primary chart elements will now use the blue from --primary via chartConfig */
+    --chart-1: 51 100% 60%; /* Brighter Gold - kept for potential other chart elements */
+    --chart-2: 180 70% 50%; /* Brighter Teal - kept for potential other chart elements */
+    --chart-3: 180 50% 70%; /* Lighter Teal - kept for potential other chart elements */
+    --chart-4: 51 80% 70%; /* Lighter Gold - kept for potential other chart elements */
+    --chart-5: 180 90% 30%; /* Darker Teal - kept for potential other chart elements */
 
     /* Sidebar specific theme */
     --sidebar-background: 210 10% 12%; /* Very Dark Blue-Gray */
     --sidebar-foreground: 0 0% 85%; /* Light Gray */
-    --sidebar-primary: 180 80% 40%; /* Brighter Teal */
+    --sidebar-primary: 220 90% 60%; /* Brighter Blue */
     --sidebar-primary-foreground: 0 0% 10%; /* Near Black */
     --sidebar-accent: 210 10% 20%; /* Darker Gray */
     --sidebar-accent-foreground: 0 0% 98%; /* Near White */
     --sidebar-border: 210 10% 25%; /* Medium Dark Gray */
-    --sidebar-ring: 51 100% 60%; /* Brighter Gold */
+    --sidebar-ring: 220 90% 60%; /* Brighter Blue */
   }
 }
 

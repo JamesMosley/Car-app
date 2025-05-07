@@ -4,8 +4,8 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react';
-import { Bar, BarChart, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid } from 'recharts'; // Import BarChart here, removed Tooltip
+import { House, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react'; // Changed LayoutDashboard to House
+import { Bar, BarChart, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
 
 const sections = [
@@ -30,7 +30,7 @@ const monthlyRevenueData = [
 const chartConfig: ChartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--primary))",
+    color: "hsl(var(--primary))", // This will now pick up the blue primary color
   },
 } satisfies ChartConfig;
 
@@ -46,12 +46,12 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
       <div className="flex items-center gap-4">
-        <LayoutDashboard className="w-8 h-8 text-primary" />
+        <House className="w-8 h-8 text-primary" /> {/* Changed icon */}
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       </div>
 
       <p className="text-muted-foreground">
-        Welcome to FleetFlow! Get an overview of your fleet operations and quickly access different management sections.
+        Welcome to GarageHub! Get an overview of your garage operations and quickly access different management sections.
       </p>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -153,7 +153,7 @@ export default function DashboardPage() {
         {/* Placeholder for other summaries */}
        <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Fleet Overview</CardTitle>
+            <CardTitle>Garage Overview</CardTitle> {/* Changed from Fleet Overview */}
             <CardDescription>Additional summary statistics will appear here.</CardDescription>
           </CardHeader>
           <CardContent>

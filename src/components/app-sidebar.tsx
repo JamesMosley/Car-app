@@ -4,13 +4,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
+  House, // Changed from LayoutDashboard
   Truck,
   FileText,
   Archive,
   CreditCard,
-  ShipWheel, // Using ShipWheel as a placeholder logo icon
-  Wrench, // Alternative icon for GarageHub
+  Wrench, 
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -27,7 +26,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'Dashboard', icon: House }, // Changed icon
   { href: '/vehicles', label: 'Vehicles', icon: Truck },
   { href: '/invoices', label: 'Invoices', icon: FileText },
   { href: '/inventory', label: 'Inventory', icon: Archive },
@@ -41,8 +40,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-         <Wrench className="w-6 h-6 text-primary" /> {/* Changed icon to Wrench for GarageHub */}
-          <h1 className="text-lg font-semibold text-primary">GarageHub</h1> {/* Changed from FleetFlow */}
+         <Wrench className="w-6 h-6 text-primary" /> 
+          <h1 className="text-lg font-semibold text-primary">GarageHub</h1> 
           <div className="ml-auto md:hidden">
              <SidebarTrigger/>
           </div>
