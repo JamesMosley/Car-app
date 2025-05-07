@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -9,6 +10,7 @@ import {
   Archive,
   CreditCard,
   ShipWheel, // Using ShipWheel as a placeholder logo icon
+  Wrench, // Alternative icon for GarageHub
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -39,8 +41,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-         <ShipWheel className="w-6 h-6 text-primary" />
-          <h1 className="text-lg font-semibold text-primary">FleetFlow</h1>
+         <Wrench className="w-6 h-6 text-primary" /> {/* Changed icon to Wrench for GarageHub */}
+          <h1 className="text-lg font-semibold text-primary">GarageHub</h1> {/* Changed from FleetFlow */}
           <div className="ml-auto md:hidden">
              <SidebarTrigger/>
           </div>
