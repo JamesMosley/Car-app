@@ -39,6 +39,7 @@ const vehicleStatusData = {
   completed: 15,
   inProgress: 5,
   pending: 3,
+  total: 15 + 5 + 3, // Calculate total for percentages
 };
 
 export default function DashboardPage() {
@@ -117,32 +118,38 @@ export default function DashboardPage() {
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
+                    {/* Segmented Status Bar */}
+                    <div className="flex h-4 w-full rounded-md overflow-hidden">
+                        <div
+                            className="bg-green-500"
+                            style={{ width: `${(vehicleStatusData.completed / vehicleStatusData.total) * 100}%` }}
+                        ></div>
+                        <div
+                            className="bg-blue-500"
+                            style={{ width: `${(vehicleStatusData.inProgress / vehicleStatusData.total) * 100}%` }}
+                        ></div>
+                        <div
+                            className="bg-orange-500"
+                            style={{ width: `${(vehicleStatusData.pending / vehicleStatusData.total) * 100}%` }}
+                        ></div>
+                    </div>
+
+                    {/* Status Labels and Counts */}
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                           {/* Use Tailwind classes directly for background colors */}
-                           <span className="h-3 w-3 rounded-full bg-green-500"></span>
-                           <span>Completed</span>
-                        </div>
+                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-green-500"></span><span>Completed</span></div>
                         <span className="font-medium">{vehicleStatusData.completed}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                           <span className="h-3 w-3 rounded-full bg-blue-500"></span>
-                           <span>In Progress</span>
-                         </div>
+                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-blue-500"></span><span>In Progress</span></div>
                          <span className="font-medium">{vehicleStatusData.inProgress}</span>
                     </div>
                      <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                           <span className="h-3 w-3 rounded-full bg-orange-500"></span>
-                           <span>Pending</span>
-                         </div>
+                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-orange-500"></span><span>Pending</span></div>
                          <span className="font-medium">{vehicleStatusData.pending}</span>
                     </div>
                 </CardContent>
             </Card>
        </div>
-
         {/* Placeholder for other summaries */}
        <Card className="mt-4">
           <CardHeader>
