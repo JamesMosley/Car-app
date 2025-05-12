@@ -21,7 +21,7 @@ export default function InventoryPage() {
                <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
             </div>
             <Button>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Item
+                <PlusCircle className="mr-2 h-4 w-4" /> Add-Item
             </Button>
        </div>
 
