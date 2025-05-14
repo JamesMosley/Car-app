@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +16,18 @@ export default function PaymentsPage() {
     { id: 'PAY002', invoiceId: 'INV004', amount: 500.00, date: '2024-07-21', method: 'Bank Transfer' },
     { id: 'PAY003', invoiceId: 'INV005', amount: 300.25, date: '2024-07-23', method: 'Check' },
   ];
+
+  const handleViewDetails = (payment: typeof payments[0]) => {
+    console.log('View payment details:', payment);
+    // Placeholder: Open a modal or navigate to a detailed view page
+  };
+
+  const handleVoidPayment = (payment: typeof payments[0]) => {
+    if (window.confirm(`Are you sure you want to void payment ${payment.id} for Invoice ${payment.invoiceId}?`)) {
+      console.log('Void payment:', payment);
+      // Placeholder: Call an API to void the payment and update state
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -94,8 +109,8 @@ export default function PaymentsPage() {
                     <TableCell>{payment.date}</TableCell>
                     <TableCell>{payment.method}</TableCell>
                     <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">View Details</Button>
-                         <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">Void</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleViewDetails(payment)}>View Details</Button>
+                         <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleVoidPayment(payment)}>Void</Button>
                     </TableCell>
                   </TableRow>
                 ))}

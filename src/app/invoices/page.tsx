@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +16,23 @@ export default function InvoicesPage() {
     { id: 'INV002', client: 'Globex Inc', amount: 850.00, date: '2024-07-20', status: 'Pending' },
     { id: 'INV003', client: 'Stark Industries', amount: 2500.75, date: '2024-07-22', status: 'Overdue' },
   ];
+
+  const handleView = (invoice: typeof invoices[0]) => {
+    console.log('View invoice:', invoice);
+    // Placeholder: Open a modal or navigate to a detailed view page
+  };
+
+  const handleEdit = (invoice: typeof invoices[0]) => {
+    console.log('Edit invoice:', invoice);
+    // Placeholder: Open a modal or navigate to an edit page
+  };
+
+  const handleDelete = (invoice: typeof invoices[0]) => {
+    if (window.confirm(`Are you sure you want to delete invoice ${invoice.id} for ${invoice.client}?`)) {
+      console.log('Delete invoice:', invoice);
+      // Placeholder: Call an API to delete the invoice and update state
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -87,9 +107,9 @@ export default function InvoicesPage() {
                     <TableCell>{invoice.date}</TableCell>
                     <TableCell>{invoice.status}</TableCell>
                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">View</Button>
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">Delete</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleView(invoice)}>View</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(invoice)}>Edit</Button>
+                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(invoice)}>Delete</Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +15,19 @@ export default function VehiclesPage() {
     { id: 'V002', make: 'Mercedes', model: 'Sprinter', year: 2021, status: 'Maintenance' },
     { id: 'V003', make: 'Chevrolet', model: 'Express', year: 2023, status: 'Active' },
   ];
+
+  const handleEdit = (vehicle: typeof vehicles[0]) => {
+    console.log('Edit vehicle:', vehicle);
+    // Placeholder: Open a modal or navigate to an edit page
+  };
+
+  const handleDelete = (vehicle: typeof vehicles[0]) => {
+    if (window.confirm(`Are you sure you want to delete ${vehicle.make} ${vehicle.model} (ID: ${vehicle.id})?`)) {
+      console.log('Delete vehicle:', vehicle);
+      // Placeholder: Call an API to delete the vehicle and update state
+    }
+  };
+
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -81,8 +97,8 @@ export default function VehiclesPage() {
                     <TableCell>{vehicle.year}</TableCell>
                     <TableCell>{vehicle.status}</TableCell>
                     <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">Delete</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(vehicle)}>Edit</Button>
+                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(vehicle)}>Delete</Button>
                     </TableCell>
                   </TableRow>
                 ))}

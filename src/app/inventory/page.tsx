@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +15,23 @@ export default function InventoryPage() {
     { id: 'P002', name: 'Brake Pads (Set)', quantity: 25, location: 'Bin B3' },
     { id: 'P003', name: 'Headlight Bulb', quantity: 100, location: 'Shelf A2' },
   ];
+
+  const handleAdjust = (item: typeof inventoryItems[0]) => {
+    console.log('Adjust item:', item);
+    // Placeholder: Open a modal or navigate to an edit page for item adjustment
+  };
+
+  const handleEdit = (item: typeof inventoryItems[0]) => {
+    console.log('Edit item:', item);
+    // Placeholder: Open a modal or navigate to an edit page
+  };
+
+  const handleDelete = (item: typeof inventoryItems[0]) => {
+    if (window.confirm(`Are you sure you want to delete ${item.name} (ID: ${item.id})?`)) {
+      console.log('Delete item:', item);
+      // Placeholder: Call an API to delete the item and update state
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -80,9 +100,9 @@ export default function InventoryPage() {
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>{item.location}</TableCell>
                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">Adjust</Button>
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">Delete</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleAdjust(item)}>Adjust</Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(item)}>Edit</Button>
+                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>Delete</Button>
                     </TableCell>
                   </TableRow>
                 ))}
