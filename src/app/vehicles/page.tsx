@@ -17,13 +17,13 @@ export default function VehiclesPage() {
   ];
 
   const handleEdit = (vehicle: typeof vehicles[0]) => {
-    console.log('Edit vehicle:', vehicle);
+    console.log('Edit vehicle - ID:', vehicle.id, 'Make:', vehicle.make, 'Model:', vehicle.model);
     // Placeholder: Open a modal or navigate to an edit page
   };
 
   const handleDelete = (vehicle: typeof vehicles[0]) => {
     if (window.confirm(`Are you sure you want to delete ${vehicle.make} ${vehicle.model} (ID: ${vehicle.id})?`)) {
-      console.log('Delete vehicle:', vehicle);
+      console.log('Delete vehicle - ID:', vehicle.id, 'Make:', vehicle.make, 'Model:', vehicle.model);
       // Placeholder: Call an API to delete the vehicle and update state
     }
   };

@@ -18,18 +18,18 @@ export default function InvoicesPage() {
   ];
 
   const handleView = (invoice: typeof invoices[0]) => {
-    console.log('View invoice:', invoice);
+    console.log('View invoice - ID:', invoice.id, 'Client:', invoice.client);
     // Placeholder: Open a modal or navigate to a detailed view page
   };
 
   const handleEdit = (invoice: typeof invoices[0]) => {
-    console.log('Edit invoice:', invoice);
+    console.log('Edit invoice - ID:', invoice.id, 'Client:', invoice.client);
     // Placeholder: Open a modal or navigate to an edit page
   };
 
   const handleDelete = (invoice: typeof invoices[0]) => {
     if (window.confirm(`Are you sure you want to delete invoice ${invoice.id} for ${invoice.client}?`)) {
-      console.log('Delete invoice:', invoice);
+      console.log('Delete invoice - ID:', invoice.id, 'Client:', invoice.client);
       // Placeholder: Call an API to delete the invoice and update state
     }
   };

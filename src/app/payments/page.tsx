@@ -18,13 +18,13 @@ export default function PaymentsPage() {
   ];
 
   const handleViewDetails = (payment: typeof payments[0]) => {
-    console.log('View payment details:', payment);
+    console.log('View payment details - ID:', payment.id, 'Invoice ID:', payment.invoiceId);
     // Placeholder: Open a modal or navigate to a detailed view page
   };
 
   const handleVoidPayment = (payment: typeof payments[0]) => {
     if (window.confirm(`Are you sure you want to void payment ${payment.id} for Invoice ${payment.invoiceId}?`)) {
-      console.log('Void payment:', payment);
+      console.log('Void payment - ID:', payment.id, 'Invoice ID:', payment.invoiceId);
       // Placeholder: Call an API to void the payment and update state
     }
   };

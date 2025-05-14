@@ -17,18 +17,18 @@ export default function InventoryPage() {
   ];
 
   const handleAdjust = (item: typeof inventoryItems[0]) => {
-    console.log('Adjust item:', item);
+    console.log('Adjust item - ID:', item.id, 'Name:', item.name);
     // Placeholder: Open a modal or navigate to an edit page for item adjustment
   };
 
   const handleEdit = (item: typeof inventoryItems[0]) => {
-    console.log('Edit item:', item);
+    console.log('Edit item - ID:', item.id, 'Name:', item.name);
     // Placeholder: Open a modal or navigate to an edit page
   };
 
   const handleDelete = (item: typeof inventoryItems[0]) => {
     if (window.confirm(`Are you sure you want to delete ${item.name} (ID: ${item.id})?`)) {
-      console.log('Delete item:', item);
+      console.log('Delete item - ID:', item.id, 'Name:', item.name);
       // Placeholder: Call an API to delete the item and update state
     }
   };
