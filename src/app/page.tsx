@@ -119,7 +119,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-6">
                     {/* Segmented Status Bar */}
-                    <div className="flex h-5 w-mid rounded-md overflow-hidden ">
+                    <div className="flex h-5 w-mid rounded-full overflow-hidden ">
                         <div
                             className="bg-green-500"
                             style={{ width: `${(vehicleStatusData.completed / vehicleStatusData.total) * 100}%` }}
