@@ -117,9 +117,9 @@ export default function DashboardPage() {
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col gap-4">
+                <CardContent className="flex flex-col gap-6">
                     {/* Segmented Status Bar */}
-                    <div className="flex h-4 w-full rounded-md overflow-hidden">
+                    <div className="flex h-5 w-mid rounded-md overflow-hidden ">
                         <div
                             className="bg-green-500"
                             style={{ width: `${(vehicleStatusData.completed / vehicleStatusData.total) * 100}%` }}
@@ -136,15 +136,15 @@ export default function DashboardPage() {
 
                     {/* Status Labels and Counts */}
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-green-500"></span><span>Completed</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-500"></span><span>Completed</span></div>
                         <span className="font-medium">{vehicleStatusData.completed}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-blue-500"></span><span>In Progress</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-blue-500"></span><span>In Progress</span></div>
                          <span className="font-medium">{vehicleStatusData.inProgress}</span>
                     </div>
                      <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-orange-500"></span><span>Pending</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-orange-500"></span><span>Pending</span></div>
                          <span className="font-medium">{vehicleStatusData.pending}</span>
                     </div>
                 </CardContent>
