@@ -85,7 +85,7 @@ export default function DashboardPage() {
               <CardContent>
                 <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                   <ResponsiveContainer width="100%" height={200}>
-                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -18, bottom: 5 }}>
                           <CartesianGrid vertical={false} strokeDasharray="3 3" />
                           <XAxis
                             dataKey="month"
