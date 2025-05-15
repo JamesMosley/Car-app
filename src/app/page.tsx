@@ -24,6 +24,11 @@ const monthlyRevenueData = [
   { month: 'May', revenue: 6000 },
   { month: 'Jun', revenue: 5500 },
   { month: 'Jul', revenue: 7000 },
+  { month: 'Aug', revenue: 7500 },
+  { month: 'Sep', revenue: 7800 },
+  { month: 'Oct', revenue: 8000 },
+  { month: 'Nov', revenue: 9000 },
+  { month: 'Dec', revenue: 9300 },
   // Add more months as needed
 ];
 
@@ -85,7 +90,7 @@ export default function DashboardPage() {
               <CardContent>
                 <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                   <ResponsiveContainer width="100%" height={200}>
-                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -18, bottom: 5 }}>
+                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                           <CartesianGrid vertical={false} strokeDasharray="3 3" />
                           <XAxis
                             dataKey="month"
