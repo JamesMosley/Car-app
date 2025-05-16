@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
-import { FileText, PlusCircle, Eye, Edit, Trash2 } from 'lucide-react';
+import { FileText, PlusCircle, Eye, Edit, Trash2, Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 type Invoice = {
   id: string;
@@ -18,14 +20,25 @@ type Invoice = {
   date: string;
   dueDate: string;
   description: string;
-  status: 'Paid' | 'Pending' | 'Overdue' | string; // Allow string for more flexibility if needed
+  status: 'Paid' | 'Pending' | 'Overdue' | string; 
 };
 
 const initialInvoices: Invoice[] = [
   { id: 'INV001', client: 'Acme Corp', amount: 1200.50, date: '2024-07-15', dueDate: '2024-08-15', description: 'Web Development Services', status: 'Paid' },
   { id: 'INV002', client: 'Globex Inc', amount: 850.00, date: '2024-07-20', dueDate: '2024-08-20', description: 'Consulting Hours', status: 'Pending' },
   { id: 'INV003', client: 'Stark Industries', amount: 2500.75, date: '2024-07-22', dueDate: '2024-08-01', description: 'Hardware Supplies', status: 'Overdue' },
+  { id: 'INV004', client: 'Wayne Enterprises', amount: 1500.00, date: '2024-06-10', dueDate: '2024-07-10', description: 'Security System Upgrade', status: 'Paid' },
+  { id: 'INV005', client: 'Cyberdyne Systems', amount: 3200.00, date: '2024-06-25', dueDate: '2024-07-25', description: 'AI Model Training', status: 'Pending' },
+  { id: 'INV006', client: 'Ollivanders Wand Shop', amount: 75.50, date: '2024-05-30', dueDate: '2024-06-15', description: 'Unicorn Hair Restock', status: 'Overdue' },
+  { id: 'INV007', client: 'Soylent Corp', amount: 999.99, date: '2024-07-01', dueDate: '2024-07-31', description: 'Food Product Delivery', status: 'Pending' },
+  { id: 'INV008', client: 'Pied Piper', amount: 5000.00, date: '2024-07-10', dueDate: '2024-08-10', description: 'Compression Algorithm License', status: 'Paid' },
+  { id: 'INV009', client: 'Stark Industries', amount: 1800.00, date: '2024-08-01', dueDate: '2024-09-01', description: 'Arc Reactor Maintenance', status: 'Pending' },
+  { id: 'INV010', client: 'Gekko & Co', amount: 10000.00, date: '2024-06-01', dueDate: '2024-07-01', description: 'Financial Consulting', status: 'Overdue' },
+  { id: 'INV011', client: 'Acme Corp', amount: 750.25, date: '2024-08-05', dueDate: '2024-09-05', description: 'Cloud Hosting Services', status: 'Pending' },
+  { id: 'INV012', client: 'Globex Inc', amount: 220.00, date: '2024-08-10', dueDate: '2024-09-10', description: 'Gadget Prototypes', status: 'Paid' },
 ];
+
+const ITEMS_PER_PAGE = 5;
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
@@ -36,9 +49,16 @@ export default function InvoicesPage() {
   const [editFormState, setEditFormState] = useState<Omit<Invoice, 'id'>>({ client: '', amount: '', date: '', dueDate: '', description: '', status: 'Pending' });
   const [addFormState, setAddFormState] = useState<Omit<Invoice, 'id'>>({ client: '', amount: '', date: '', dueDate: '', description: '', status: 'Pending' });
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleAddInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     setAddFormState(prev => ({ ...prev, [id]: id === 'amount' ? (value === '' ? '' : Number(value)) : value }));
+  };
+  
+  const handleAddSelectChange = (value: string) => {
+    setAddFormState(prev => ({ ...prev, status: value }));
   };
 
   const handleCreateInvoice = () => {
@@ -51,8 +71,9 @@ export default function InvoicesPage() {
       ...addFormState,
       amount: Number(addFormState.amount),
     };
-    setInvoices(prev => [...prev, newInvoice]);
+    setInvoices(prev => [newInvoice, ...prev]);
     setAddFormState({ client: '', amount: '', date: '', dueDate: '', description: '', status: 'Pending' }); // Reset form
+    setCurrentPage(1); // Reset to first page to see new item
   };
   
   const openViewModal = (invoice: Invoice) => {
@@ -71,6 +92,10 @@ export default function InvoicesPage() {
     setEditFormState(prev => ({ ...prev, [id]: id === 'amount' ? (value === '' ? '' : Number(value)) : value }));
   };
 
+  const handleEditSelectChange = (value: string) => {
+    setEditFormState(prev => ({ ...prev, status: value }));
+  };
+
   const handleSaveEdit = () => {
     if (!currentItemToEdit || !editFormState.client || editFormState.amount === '' || !editFormState.date || !editFormState.dueDate) {
       alert('Please fill in Client, Amount, Invoice Date, and Due Date.');
@@ -87,10 +112,42 @@ export default function InvoicesPage() {
 
   const handleDelete = (invoiceToDelete: Invoice) => {
     if (window.confirm(`Are you sure you want to delete invoice ${invoiceToDelete.id} for ${invoiceToDelete.client}?`)) {
-      setInvoices(prevInvoices => prevInvoices.filter(inv => inv.id !== invoiceToDelete.id));
-      console.log('Deleted invoice - ID:', invoiceToDelete.id, 'Client:', invoiceToDelete.client);
+      const updatedInvoices = invoices.filter(inv => inv.id !== invoiceToDelete.id);
+      setInvoices(updatedInvoices);
+      
+      const newFilteredInvoices = updatedInvoices.filter(invoice =>
+        [invoice.id, invoice.client, invoice.amount.toString(), invoice.date, invoice.dueDate, invoice.status, invoice.description].some(field =>
+          field.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+      const newTotalPages = Math.ceil(newFilteredInvoices.length / ITEMS_PER_PAGE);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(Math.max(1, newTotalPages));
+      }
     }
   };
+
+  const filteredInvoices = useMemo(() => {
+    return invoices.filter(invoice =>
+      [invoice.id, invoice.client, invoice.amount.toString(), invoice.date, invoice.dueDate, invoice.status, invoice.description].some(field =>
+        typeof field === 'string' && field.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [invoices, searchTerm]);
+
+  const totalPages = Math.ceil(filteredInvoices.length / ITEMS_PER_PAGE);
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentInvoices = filteredInvoices.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -99,7 +156,6 @@ export default function InvoicesPage() {
           <FileText className="w-8 h-8 text-primary" />
           <h1 className="text-3xl font-bold tracking-tight">Invoices</h1>
         </div>
-        {/* The "Create Invoice" button functionality is now part of the form card below */}
       </div>
 
       <Card>
@@ -129,12 +185,17 @@ export default function InvoicesPage() {
             <Textarea id="description" placeholder="Brief description of services or items" value={addFormState.description} onChange={handleAddInputChange} />
           </div>
            <div className="grid gap-2">
-            <Label htmlFor="status">Status</Label>
-            <select id="status" value={addFormState.status} onChange={(e) => setAddFormState(prev => ({...prev, status: e.target.value}))} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
-                <option value="Pending">Pending</option>
-                <option value="Paid">Paid</option>
-                <option value="Overdue">Overdue</option>
-            </select>
+            <Label htmlFor="status_add">Status</Label>
+            <Select value={addFormState.status} onValueChange={handleAddSelectChange}>
+                <SelectTrigger id="status_add">
+                    <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Paid">Paid</SelectItem>
+                    <SelectItem value="Overdue">Overdue</SelectItem>
+                </SelectContent>
+            </Select>
           </div>
         </CardContent>
         <CardFooter>
@@ -146,8 +207,24 @@ export default function InvoicesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Invoice List</CardTitle>
-          <CardDescription>Overview of all invoices.</CardDescription>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <CardTitle>Invoice List</CardTitle>
+              <CardDescription>Overview of all invoices. Search by ID, client, amount, dates, status, or description.</CardDescription>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search invoices..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); 
+                }}
+                className="pl-10"
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -157,34 +234,59 @@ export default function InvoicesPage() {
                 <TableHead>Client</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Due Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.id}>
-                  <TableCell>{invoice.id}</TableCell>
-                  <TableCell>{invoice.client}</TableCell>
-                  <TableCell>${Number(invoice.amount).toFixed(2)}</TableCell>
-                  <TableCell>{invoice.date}</TableCell>
-                  <TableCell>{invoice.status}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => openViewModal(invoice)}>
-                      <Eye className="mr-2 h-4 w-4" /> View
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => openEditModal(invoice)}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(invoice)}>
-                      <Trash2 className="mr-2 h-4 w-4" /> Delete
-                    </Button>
+              {currentInvoices.length > 0 ? (
+                currentInvoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                    <TableCell>{invoice.id}</TableCell>
+                    <TableCell>{invoice.client}</TableCell>
+                    <TableCell>${Number(invoice.amount).toFixed(2)}</TableCell>
+                    <TableCell>{invoice.date}</TableCell>
+                    <TableCell>{invoice.dueDate}</TableCell>
+                    <TableCell>{invoice.status}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => openViewModal(invoice)}>
+                        <Eye className="mr-2 h-4 w-4" /> View
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => openEditModal(invoice)}>
+                        <Edit className="mr-2 h-4 w-4" /> Edit
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(invoice)}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center">
+                    No invoices found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardContent>
+        {totalPages > 0 && (
+          <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
+            <div className="text-sm text-muted-foreground">
+              Showing {filteredInvoices.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredInvoices.length)} of {filteredInvoices.length} invoices.
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handlePrevPage} disabled={currentPage === 1} variant="outline" size="sm">
+                Previous
+              </Button>
+              <Button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0} variant="outline" size="sm">
+                Next
+              </Button>
+            </div>
+          </CardFooter>
+        )}
       </Card>
 
       {/* View Invoice Modal */}
@@ -222,32 +324,37 @@ export default function InvoicesPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="client" className="text-right">Client</Label>
-                <Input id="client" value={editFormState.client} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_client" className="text-right">Client</Label>
+                <Input id="edit_client" name="client" value={editFormState.client} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="amount" className="text-right">Amount</Label>
-                <Input id="amount" type="number" value={editFormState.amount} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_amount" className="text-right">Amount</Label>
+                <Input id="edit_amount" name="amount" type="number" value={editFormState.amount} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="date" className="text-right">Date</Label>
-                <Input id="date" type="date" value={editFormState.date} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_date" className="text-right">Date</Label>
+                <Input id="edit_date" name="date" type="date" value={editFormState.date} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="dueDate" className="text-right">Due Date</Label>
-                <Input id="dueDate" type="date" value={editFormState.dueDate} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_dueDate" className="text-right">Due Date</Label>
+                <Input id="edit_dueDate" name="dueDate" type="date" value={editFormState.dueDate} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">Description</Label>
-                <Textarea id="description" value={editFormState.description} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_description" className="text-right">Description</Label>
+                <Textarea id="edit_description" name="description" value={editFormState.description} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="status" className="text-right">Status</Label>
-                 <select id="status" value={editFormState.status} onChange={(e) => setEditFormState(prev => ({...prev, status: e.target.value}))} className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
-                    <option value="Pending">Pending</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Overdue">Overdue</option>
-                </select>
+                <Label htmlFor="edit_status" className="text-right">Status</Label>
+                 <Select value={editFormState.status} onValueChange={handleEditSelectChange}>
+                    <SelectTrigger id="edit_status" className="col-span-3">
+                        <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Paid">Paid</SelectItem>
+                        <SelectItem value="Overdue">Overdue</SelectItem>
+                    </SelectContent>
+                </Select>
               </div>
             </div>
             <DialogFooter>
