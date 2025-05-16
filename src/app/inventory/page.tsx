@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
-import { Archive, PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Archive, PlusCircle, Edit, Trash2, Search } from 'lucide-react';
 
 type InventoryItem = {
   id: string;
@@ -22,7 +22,18 @@ const initialInventoryItems: InventoryItem[] = [
   { id: 'P001', name: 'Oil Filter', quantity: 50, location: 'Shelf A1', sku: 'OF-1023' },
   { id: 'P002', name: 'Brake Pads (Set)', quantity: 25, location: 'Bin B3', sku: 'BP-4050' },
   { id: 'P003', name: 'Headlight Bulb', quantity: 100, location: 'Shelf A2', sku: 'HB-H4' },
+  { id: 'P004', name: 'Spark Plugs (4x)', quantity: 75, location: 'Shelf C1', sku: 'SP-004X' },
+  { id: 'P005', name: 'Air Filter', quantity: 40, location: 'Shelf A1', sku: 'AF-1055' },
+  { id: 'P006', name: 'Wiper Blades (Pair)', quantity: 60, location: 'Bin D2', sku: 'WB-2224' },
+  { id: 'P007', name: 'Battery (Group 35)', quantity: 15, location: 'Shelf B2', sku: 'BAT-G35' },
+  { id: 'P008', name: 'Coolant (Gallon)', quantity: 30, location: 'Storage Area 1', sku: 'CLT-GL' },
+  { id: 'P009', name: 'Brake Fluid (DOT4)', quantity: 20, location: 'Storage Area 1', sku: 'BF-DT4' },
+  { id: 'P010', name: 'Tire Pressure Gauge', quantity: 10, location: 'Tool Cabinet', sku: 'TPG-001' },
+  { id: 'P011', name: 'Transmission Fluid (ATF)', quantity: 22, location: 'Shelf C2', sku: 'TF-ATF' },
+  { id: 'P012', name: 'Power Steering Fluid', quantity: 18, location: 'Shelf C2', sku: 'PSF-01' },
 ];
+
+const ITEMS_PER_PAGE = 5;
 
 export default function InventoryPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
@@ -30,6 +41,9 @@ export default function InventoryPage() {
   const [currentItemToEdit, setCurrentItemToEdit] = useState<InventoryItem | null>(null);
   const [editFormState, setEditFormState] = useState<Omit<InventoryItem, 'id'>>({ name: '', quantity: '', location: '', sku: '' });
   const [addItemFormState, setAddItemFormState] = useState<Omit<InventoryItem, 'id'>>({ name: '', quantity: '', location: '', sku: '' });
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleAddItemInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -48,8 +62,9 @@ export default function InventoryPage() {
       location: addItemFormState.location,
       sku: addItemFormState.sku || '',
     };
-    setInventoryItems(prev => [...prev, newItem]);
+    setInventoryItems(prev => [newItem, ...prev]);
     setAddItemFormState({ name: '', quantity: '', location: '', sku: '' }); // Reset form
+    setCurrentPage(1); // Reset to first page to see new item
   };
 
   const openEditModal = (item: InventoryItem) => {
@@ -79,9 +94,41 @@ export default function InventoryPage() {
 
   const handleDelete = (itemToDelete: InventoryItem) => {
     if (window.confirm(`Are you sure you want to delete ${itemToDelete.name} (ID: ${itemToDelete.id})?`)) {
-      setInventoryItems(prevItems => prevItems.filter(item => item.id !== itemToDelete.id));
-      console.log('Deleted item - ID:', itemToDelete.id, 'Name:', itemToDelete.name);
+      const updatedItems = inventoryItems.filter(item => item.id !== itemToDelete.id);
+      setInventoryItems(updatedItems);
+      
+      // Recalculate total pages and adjust current page if necessary
+      const newFilteredItems = updatedItems.filter(item =>
+        [item.id, item.name, item.location, item.sku || '', item.quantity.toString()].some(field =>
+          field.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+      const newTotalPages = Math.ceil(newFilteredItems.length / ITEMS_PER_PAGE);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(Math.max(1, newTotalPages));
+      }
     }
+  };
+
+  const filteredInventoryItems = useMemo(() => {
+    return inventoryItems.filter(item =>
+      [item.id, item.name, item.location, item.sku || '', item.quantity.toString()].some(field =>
+        field.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [inventoryItems, searchTerm]);
+
+  const totalPages = Math.ceil(filteredInventoryItems.length / ITEMS_PER_PAGE);
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentInventoryItems = filteredInventoryItems.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
   };
 
   return (
@@ -91,7 +138,6 @@ export default function InventoryPage() {
           <Archive className="w-8 h-8 text-primary" />
           <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
         </div>
-        {/* The "Add Item" button functionality is now part of the form card below */}
       </div>
 
       <Card>
@@ -126,8 +172,24 @@ export default function InventoryPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Inventory List</CardTitle>
-          <CardDescription>Current stock levels and locations.</CardDescription>
+           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <CardTitle>Inventory List</CardTitle>
+              <CardDescription>Current stock levels and locations. Search by ID, name, location, SKU, or quantity.</CardDescription>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search inventory..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); 
+                }}
+                className="pl-10"
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -142,26 +204,49 @@ export default function InventoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {inventoryItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell>{item.location}</TableCell>
-                  <TableCell>{item.sku}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => openEditModal(item)}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>
-                      <Trash2 className="mr-2 h-4 w-4" /> Delete
-                    </Button>
+              {currentInventoryItems.length > 0 ? (
+                currentInventoryItems.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{item.location}</TableCell>
+                    <TableCell>{item.sku}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => openEditModal(item)}>
+                        <Edit className="mr-2 h-4 w-4" /> Edit
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center">
+                    No inventory items found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardContent>
+        {totalPages > 0 && (
+          <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
+            <div className="text-sm text-muted-foreground">
+              Showing {filteredInventoryItems.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredInventoryItems.length)} of {filteredInventoryItems.length} items.
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handlePrevPage} disabled={currentPage === 1} variant="outline" size="sm">
+                Previous
+              </Button>
+              <Button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0} variant="outline" size="sm">
+                Next
+              </Button>
+            </div>
+          </CardFooter>
+        )}
       </Card>
 
       {/* Edit Item Modal */}
@@ -174,20 +259,20 @@ export default function InventoryPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">Name</Label>
-                <Input id="name" value={editFormState.name} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_name" className="text-right">Name</Label>
+                <Input id="edit_name" name="name" value={editFormState.name} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="quantity" className="text-right">Quantity</Label>
-                <Input id="quantity" type="number" value={editFormState.quantity} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_quantity" className="text-right">Quantity</Label>
+                <Input id="edit_quantity" name="quantity" type="number" value={editFormState.quantity} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">Location</Label>
-                <Input id="location" value={editFormState.location} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_location" className="text-right">Location</Label>
+                <Input id="edit_location" name="location" value={editFormState.location} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="sku" className="text-right">SKU</Label>
-                <Input id="sku" value={editFormState.sku} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="edit_sku" className="text-right">SKU</Label>
+                <Input id="edit_sku" name="sku" value={editFormState.sku} onChange={handleEditInputChange} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>
