@@ -28,6 +28,7 @@ const initialPayments: Payment[] = [
   { id: 'PAY006', invoiceId: 'INV012', amount: 220.00, date: '2024-08-12', method: 'Bank Transfer' },
   { id: 'PAY007', invoiceId: 'INV001', amount: 50.00, date: '2024-08-15', method: 'Other' }, // Example of 'Other'
   { id: 'PAY008', invoiceId: 'INV004', amount: 5000.00, date: '2024-07-21', method: 'Bank Transfer' },
+  { id: 'PAY009', invoiceId: 'INV003', amount: 8973.00, date: '2025-01-21', method: 'Credit Card'},
 ];
 
 const ITEMS_PER_PAGE = 5;
