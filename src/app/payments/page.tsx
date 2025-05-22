@@ -15,8 +15,8 @@ type Payment = {
   id: string;
   invoiceId: string;
   amount: number | string;
-  date: string;
   method: 'Credit Card' | 'Bank Transfer' | 'Check' | 'Cash' | 'Other' | string;
+  date: string;
 };
 
 const initialPayments: Payment[] = [
