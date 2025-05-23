@@ -260,7 +260,12 @@ export default function VehiclesPage() {
               Showing {filteredVehicles.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredVehicles.length)} of {filteredVehicles.length} vehicles.
             </div>
             <div className="flex gap-2">
-              
+              <Button onClick={handlePrevPage} disabled={currentPage === 1} variant="outline" size="sm">
+                Previous
+              </Button>
+              <Button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0} variant="outline" size="sm">
+                Next
+              </Button>
             </div>
           </CardFooter>
         )}
