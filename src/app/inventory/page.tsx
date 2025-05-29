@@ -204,31 +204,7 @@ export default function PaymentsPage() {
                       <Button variant="ghost" size="sm" onClick={() => openViewModal(payment)}>
                         <Eye className="mr-2 h-4 w-4" /> View Details
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleVoidPayment(payment)}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Void
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center">
-                    No payments found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-         {totalPages > 0 && (
-          <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
-            <div className="text-sm text-muted-foreground">
-              Showing {filteredPayments.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredPayments.length)} of {filteredPayments.length} payments.
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={handlePrevPage} disabled={currentPage === 1} variant="outline" size="sm">
-                Previous
-              </Button>
+                     
               <Button onClick={handleNextPage} disabled={currentPage === totalPages || totalPages === 0} variant="outline" size="sm">
                 Next
               </Button>
