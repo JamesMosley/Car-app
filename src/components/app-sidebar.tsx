@@ -36,40 +36,4 @@ const menuItems = [
 export function AppSidebar() {
   const pathname = usePathname();
 
-  return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 p-2">
-         <Wrench className="w-6 h-6 text-primary" /> 
-          <h1 className="text-lg font-semibold text-primary">GarageHub</h1> 
-          <div className="ml-auto md:hidden">
-             <SidebarTrigger/>
-          </div>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarMenu>
-          {menuItems.map((item) => (
-            <SidebarMenuItem key={item.label}>
-              <Link href={item.href} legacyBehavior passHref>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  tooltip={item.label}
-                >
-                  <a>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </a>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarContent>
-       <SidebarFooter className="hidden md:flex">
-         <SidebarTrigger/>
-       </SidebarFooter>
-    </Sidebar>
-  );
-}
+ 
