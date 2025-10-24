@@ -23,6 +23,15 @@ const monthlyRevenueData = [
   { month: 'May', revenue: 6000 },
   { month: 'Jun', revenue: 5500 },
   { month: 'Jul', revenue: 7000 },
+<<<<<<< HEAD:src/app/(app)/page.tsx
+=======
+  { month: 'Aug', revenue: 6500 },
+  { month: 'Sep', revenue: 7800 },
+  { month: 'Oct', revenue: 8000 },
+  { month: 'Nov', revenue: 9000 },
+  { month: 'Dec', revenue: 9300 },
+  // Add more months as needed
+>>>>>>> origin/master:src/app/page.tsx
 ];
 
 const chartConfig: ChartConfig = {
@@ -80,7 +89,7 @@ export default function DashboardPage() {
               <CardContent>
                 <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                   <ResponsiveContainer width="100%" height={200}>
-                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                      <BarChart accessibilityLayer data={monthlyRevenueData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                           <CartesianGrid vertical={false} strokeDasharray="3 3" />
                           <XAxis
                             dataKey="month"
@@ -111,8 +120,14 @@ export default function DashboardPage() {
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
                 </CardHeader>
+<<<<<<< HEAD:src/app/(app)/page.tsx
                 <CardContent className="flex flex-col gap-4">
                     <div className="flex h-4 w-full rounded-md overflow-hidden">
+=======
+                <CardContent className="flex flex-col gap-6">
+                    {/* Segmented Status Bar */}
+                    <div className="flex h-5 w-mid rounded-full overflow-hidden ">
+>>>>>>> origin/master:src/app/page.tsx
                         <div
                             className="bg-green-500"
                             style={{ width: `${(vehicleStatusData.completed / vehicleStatusData.total) * 100}%` }}
@@ -128,15 +143,15 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-green-500"></span><span>Completed</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-green-500"></span><span>Completed</span></div>
                         <span className="font-medium">{vehicleStatusData.completed}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-blue-500"></span><span>In Progress</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-blue-500"></span><span>In Progress</span></div>
                          <span className="font-medium">{vehicleStatusData.inProgress}</span>
                     </div>
                      <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-orange-500"></span><span>Pending</span></div>
+                         <div className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-orange-500"></span><span>Pending</span></div>
                          <span className="font-medium">{vehicleStatusData.pending}</span>
                     </div>
                 </CardContent>
