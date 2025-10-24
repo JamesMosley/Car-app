@@ -110,7 +110,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
-                </Header>
+                </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <div className="flex h-4 w-full rounded-md overflow-hidden">
                         <div
@@ -153,7 +153,6 @@ export default function DashboardPage() {
              </div>
           </CardContent>
        </Card>
-
     </div>
   );
 }
