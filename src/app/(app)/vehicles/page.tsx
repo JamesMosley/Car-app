@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -77,8 +78,8 @@ export default function VehiclesPage() {
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setEditFormState(prev => ({ ...prev, [id]: id === 'year' ? (value === '' ? '' : Number(value)) : value }));
+    const { name, value } = e.target;
+    setEditFormState(prev => ({ ...prev, [name]: value }));
   };
 
   const handleEditSelectChange = (value: string) => {
@@ -281,25 +282,25 @@ export default function VehiclesPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_make" className="text-right">Make</Label>
-                <Input id="edit_make" name="make" value={editFormState.make} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="make" className="text-right">Make</Label>
+                <Input id="make" name="make" value={editFormState.make} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_model" className="text-right">Model</Label>
-                <Input id="edit_model" name="model" value={editFormState.model} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="model" className="text-right">Model</Label>
+                <Input id="model" name="model" value={editFormState.model} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_year" className="text-right">Year</Label>
-                <Input id="edit_year" name="year" type="number" value={editFormState.year} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="year" className="text-right">Year</Label>
+                <Input id="year" name="year" type="number" value={editFormState.year} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_vin" className="text-right">VIN</Label>
-                <Input id="edit_vin" name="vin" value={editFormState.vin} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="vin" className="text-right">VIN</Label>
+                <Input id="vin" name="vin" value={editFormState.vin} onChange={handleEditInputChange} className="col-span-3" />
               </div>
                <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_status" className="text-right">Status</Label>
+                <Label htmlFor="status" className="text-right">Status</Label>
                 <Select value={editFormState.status} onValueChange={handleEditSelectChange}>
-                  <SelectTrigger id="edit_status" className="col-span-3">
+                  <SelectTrigger id="status" className="col-span-3">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>

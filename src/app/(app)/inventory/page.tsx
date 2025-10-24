@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -75,9 +76,10 @@ export default function InventoryPage() {
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setEditFormState(prev => ({ ...prev, [id]: id === 'quantity' ? (value === '' ? '' : Number(value)) : value }));
+    const inputName = e.target.name;
+    setEditFormState(prev => ({ ...prev, [inputName]: value }));
   };
-
+  
   const handleSaveEdit = () => {
     if (!currentItemToEdit || !editFormState.name || editFormState.quantity === '' || !editFormState.location) {
       alert('Please fill in Name, Quantity, and Location.');
@@ -259,20 +261,20 @@ export default function InventoryPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_name" className="text-right">Name</Label>
-                <Input id="edit_name" name="name" value={editFormState.name} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="name" className="text-right">Name</Label>
+                <Input id="name" name="name" value={editFormState.name} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_quantity" className="text-right">Quantity</Label>
-                <Input id="edit_quantity" name="quantity" type="number" value={editFormState.quantity} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="quantity" className="text-right">Quantity</Label>
+                <Input id="quantity" name="quantity" type="number" value={editFormState.quantity} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_location" className="text-right">Location</Label>
-                <Input id="edit_location" name="location" value={editFormState.location} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="location" className="text-right">Location</Label>
+                <Input id="location" name="location" value={editFormState.location} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_sku" className="text-right">SKU</Label>
-                <Input id="edit_sku" name="sku" value={editFormState.sku} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="sku" className="text-right">SKU</Label>
+                <Input id="sku" name="sku" value={editFormState.sku} onChange={handleEditInputChange} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>

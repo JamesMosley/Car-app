@@ -1,22 +1,18 @@
+
+"use client";
+
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
-import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
 import { Toaster } from "@/components/ui/toaster";
-import { Bell, Search } from 'lucide-react'; // Added Search icon
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { Input } from '@/components/ui/input'; // Added Input component
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Wrench } from 'lucide-react';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+const inter = Inter({ subsets: ['latin'] });
 
-
-export const metadata: Metadata = {
+// This can't be in the component body because of "use client"
+const metadata: Metadata = {
   title: 'GarageHub',
   description: 'Manage your garage with ease.',
 };
@@ -26,51 +22,60 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      if (!isAuthenticated && pathname !== '/login') {
+        router.replace('/login');
+      }
+    }
+  }, [isClient, pathname, router]);
+
+  if (!isClient) {
+    return (
+      <html lang="en">
+        <body className={`${inter.className} flex items-center justify-center min-h-screen bg-background`}>
+           <div className="flex items-center gap-2">
+             <Wrench className="w-8 h-8 text-primary animate-spin" />
+             <h1 className="text-2xl font-bold text-primary">Loading GarageHub...</h1>
+           </div>
+        </body>
+      </html>
+    );
+  }
+
+  const isAuthenticated = typeof window !== 'undefined' && localStorage.getItem('isAuthenticated') === 'true';
+
+  if (!isAuthenticated && pathname !== '/login') {
+     return (
+      <html lang="en">
+        <body className={`${inter.className} flex items-center justify-center min-h-screen bg-background`}>
+           <div className="flex items-center gap-2">
+             <Wrench className="w-8 h-8 text-primary animate-spin" />
+             <h1 className="text-2xl font-bold text-primary">Redirecting to login...</h1>
+           </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} antialiased flex flex-col min-h-screen`}>
-        <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            {/* Left side: GarageHub title and Search */}
-            <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center space-x-2 text-lg font-bold text-primary">
-                GarageHub
-              </Link>
-              <div className="relative ml-4 hidden md:block"> {/* Hide search on small screens initially, can be adjusted */}
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="h-9 w-full rounded-md pl-10 pr-4 md:w-[200px] lg:w-[300px]"
-                />
-              </div>
-            </div>
-
-            {/* Right side: User info and notifications */}
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon" aria-label="Notifications">
-                <Bell className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-8 w-8">
-                  {/* <AvatarImage src="/path-to-user-image.png" alt="James Mosley" /> */}
-                  <AvatarFallback>JM</AvatarFallback>
-                </Avatar>
-                <span className="hidden text-sm font-medium sm:block">James Mosley</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <div className="flex flex-1">
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              {children}
-            </SidebarInset>
-          </SidebarProvider>
-        </div>
-        <Toaster />
+      <head>
+        <title>{String(metadata.title)}</title>
+        <meta name="description" content={String(metadata.description)} />
+      </head>
+      <body className={inter.className}>
+          {children}
+          <Toaster />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 
+
 "use client" // Required for recharts client components
 
 import Link from 'next/link';
@@ -116,7 +117,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
-                </CardHeader>
+                </Header>
                 <CardContent className="flex flex-col gap-4">
                     {/* Segmented Status Bar */}
                     <div className="flex h-4 w-full rounded-md overflow-hidden">

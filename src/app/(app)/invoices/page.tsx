@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -88,8 +89,8 @@ export default function InvoicesPage() {
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setEditFormState(prev => ({ ...prev, [id]: id === 'amount' ? (value === '' ? '' : Number(value)) : value }));
+    const { name, value } = e.target;
+    setEditFormState(prev => ({ ...prev, [name]: value }));
   };
 
   const handleEditSelectChange = (value: string) => {
@@ -324,29 +325,29 @@ export default function InvoicesPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_client" className="text-right">Client</Label>
-                <Input id="edit_client" name="client" value={editFormState.client} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="client" className="text-right">Client</Label>
+                <Input id="client" name="client" value={editFormState.client} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_amount" className="text-right">Amount</Label>
-                <Input id="edit_amount" name="amount" type="number" value={editFormState.amount} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="amount" className="text-right">Amount</Label>
+                <Input id="amount" name="amount" type="number" value={editFormState.amount} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_date" className="text-right">Date</Label>
-                <Input id="edit_date" name="date" type="date" value={editFormState.date} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="date" className="text-right">Date</Label>
+                <Input id="date" name="date" type="date" value={editFormState.date} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_dueDate" className="text-right">Due Date</Label>
-                <Input id="edit_dueDate" name="dueDate" type="date" value={editFormState.dueDate} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="dueDate" className="text-right">Due Date</Label>
+                <Input id="dueDate" name="dueDate" type="date" value={editFormState.dueDate} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_description" className="text-right">Description</Label>
-                <Textarea id="edit_description" name="description" value={editFormState.description} onChange={handleEditInputChange} className="col-span-3" />
+                <Label htmlFor="description" className="text-right">Description</Label>
+                <Textarea id="description" name="description" value={editFormState.description} onChange={handleEditInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit_status" className="text-right">Status</Label>
+                <Label htmlFor="status" className="text-right">Status</Label>
                  <Select value={editFormState.status} onValueChange={handleEditSelectChange}>
-                    <SelectTrigger id="edit_status" className="col-span-3">
+                    <SelectTrigger id="status" className="col-span-3">
                         <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
