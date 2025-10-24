@@ -15,28 +15,18 @@ import { Label } from "@/components/ui/label";
 import { Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  useEffect(() => {
-    // If user is already authenticated, redirect to dashboard
-    if (localStorage.getItem('isAuthenticated') === 'true') {
-      router.replace('/');
-    }
-  }, [router]);
-
   const handleLogin = () => {
     // In a real app, you'd validate credentials here
     console.log("Attempting to log in with email and password...");
-    localStorage.setItem('isAuthenticated', 'true');
     router.replace('/');
   };
 
   const handleGoogleLogin = () => {
     console.log("Attempting to log in with Google...");
-    localStorage.setItem('isAuthenticated', 'true');
     router.replace('/');
   };
 

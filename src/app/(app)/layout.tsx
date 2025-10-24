@@ -3,24 +3,17 @@
 
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
-import { Bell, Search, LogOut } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
 
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    router.replace('/login');
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,9 +42,6 @@ export default function AppLayout({
               </Avatar>
               <span className="hidden text-sm font-medium sm:block">James Mosley</span>
             </div>
-             <Button variant="ghost" size="icon" aria-label="Logout" onClick={handleLogout}>
-                <LogOut className="h-5 w-5" />
-              </Button>
           </div>
         </div>
       </header>
