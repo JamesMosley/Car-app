@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { Bell, Search } from 'lucide-react';
@@ -8,12 +10,26 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/context/auth-context';
 
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { isAuthenticated, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace('/login');
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
+    // You can render a loading spinner or null here while redirecting
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -42,6 +58,7 @@ export default function AppLayout({
               </Avatar>
               <span className="hidden text-sm font-medium sm:block">James Mosley</span>
             </div>
+             <Button variant="outline" size="sm" onClick={logout}>Logout</Button>
           </div>
         </div>
       </header>

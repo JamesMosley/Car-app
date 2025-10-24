@@ -15,19 +15,25 @@ import { Label } from "@/components/ui/label";
 import { Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isAuthenticated, login } = useAuth();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard
+    if (isAuthenticated) {
+      router.replace('/');
+    }
+  }, [isAuthenticated, router]);
+
 
   const handleLogin = () => {
     // In a real app, you'd validate credentials here
-    console.log("Attempting to log in with email and password...");
-    router.replace('/');
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("Attempting to log in with Google...");
-    router.replace('/');
+    console.log("Attempting to log in...");
+    login();
   };
 
   return (
@@ -54,7 +60,7 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button className="w-full" onClick={handleLogin}>Sign in</Button>
-          <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+          <Button variant="outline" className="w-full" onClick={handleLogin}>
             Sign in with Google
           </Button>
           <div className="mt-4 text-center text-sm">
