@@ -1,10 +1,9 @@
-
 "use client" // Required for recharts client components
 
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { House, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react'; // Changed LayoutDashboard to House
+import { House, Truck, FileText, Archive, CreditCard, ArrowRight } from 'lucide-react';
 import { Bar, BarChart, Rectangle, ResponsiveContainer, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
 
@@ -15,7 +14,6 @@ const sections = [
   { href: '/payments', title: 'Payments', description: 'Monitor and record payments.', icon: CreditCard },
 ];
 
-// Placeholder data for Monthly Revenue
 const monthlyRevenueData = [
   { month: 'Jan', revenue: 4000 },
   { month: 'Feb', revenue: 3000 },
@@ -24,29 +22,27 @@ const monthlyRevenueData = [
   { month: 'May', revenue: 6000 },
   { month: 'Jun', revenue: 5500 },
   { month: 'Jul', revenue: 7000 },
-  // Add more months as needed
 ];
 
 const chartConfig: ChartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--primary))", // This will now pick up the blue primary color
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
 
-// Placeholder data for Vehicle Status
 const vehicleStatusData = {
   completed: 10,
   inProgress: 5,
   pending: 3,
-  total: 18, // Calculate total for percentages
+  total: 18,
 };
 
 export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
       <div className="flex items-center gap-4">
-        <House className="w-8 h-8 text-primary" /> {/* Changed icon */}
+        <House className="w-8 h-8 text-primary" />
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       </div>
 
@@ -74,9 +70,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-        {/* New Sections: Monthly Revenue and Vehicle Status */}
        <div className="grid gap-4 md:grid-cols-2">
-           {/* Monthly Revenue Chart */}
            <Card>
               <CardHeader>
                 <CardTitle>Monthly Revenue</CardTitle>
@@ -111,14 +105,12 @@ export default function DashboardPage() {
               </CardContent>
            </Card>
 
-           {/* Vehicle Status Summary */}
             <Card>
                 <CardHeader>
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
                 </Header>
                 <CardContent className="flex flex-col gap-4">
-                    {/* Segmented Status Bar */}
                     <div className="flex h-4 w-full rounded-md overflow-hidden">
                         <div
                             className="bg-green-500"
@@ -134,7 +126,6 @@ export default function DashboardPage() {
                         ></div>
                     </div>
 
-                    {/* Status Labels and Counts */}
                     <div className="flex items-center justify-between">
                          <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-green-500"></span><span>Completed</span></div>
                         <span className="font-medium">{vehicleStatusData.completed}</span>
@@ -150,10 +141,9 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
        </div>
-        {/* Placeholder for other summaries */}
        <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Garage Overview</CardTitle> {/* Changed from Fleet Overview */}
+            <CardTitle>Garage Overview</CardTitle>
             <CardDescription>Additional summary statistics will appear here.</CardDescription>
           </CardHeader>
           <CardContent>
