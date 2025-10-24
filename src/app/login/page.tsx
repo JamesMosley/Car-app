@@ -37,8 +37,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-secondary/50">
-      <Card className="w-full max-w-sm">
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <Card className="w-full max-w-sm shadow-xl">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">
                <Wrench className="w-8 h-8 text-primary" />
