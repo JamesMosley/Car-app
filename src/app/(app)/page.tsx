@@ -1,5 +1,4 @@
 
-
 "use client" // Required for recharts client components
 
 import Link from 'next/link';
