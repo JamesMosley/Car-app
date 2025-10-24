@@ -39,7 +39,7 @@ const vehicleStatusData = {
   completed: 10,
   inProgress: 5,
   pending: 3,
-  total: 15 + 5 + 3, // Calculate total for percentages
+  total: 18, // Calculate total for percentages
 };
 
 export default function DashboardPage() {
