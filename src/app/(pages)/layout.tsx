@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Wrench } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -37,7 +37,8 @@ export default function AppLayout({
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center space-x-2 text-lg font-bold text-primary">
-              GarageHub
+              <Wrench className="h-6 w-6" />
+              <span>GarageHub</span>
             </Link>
             <div className="relative ml-4 hidden md:block">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

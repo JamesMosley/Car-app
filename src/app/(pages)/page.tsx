@@ -23,15 +23,11 @@ const monthlyRevenueData = [
   { month: 'May', revenue: 6000 },
   { month: 'Jun', revenue: 5500 },
   { month: 'Jul', revenue: 7000 },
-<<<<<<< HEAD:src/app/(app)/page.tsx
-=======
   { month: 'Aug', revenue: 6500 },
   { month: 'Sep', revenue: 7800 },
   { month: 'Oct', revenue: 8000 },
   { month: 'Nov', revenue: 9000 },
   { month: 'Dec', revenue: 9300 },
-  // Add more months as needed
->>>>>>> origin/master:src/app/page.tsx
 ];
 
 const chartConfig: ChartConfig = {
@@ -120,14 +116,8 @@ export default function DashboardPage() {
                     <CardTitle>Vehicle Status</CardTitle>
                     <CardDescription>Current status distribution of vehicles.</CardDescription>
                 </CardHeader>
-<<<<<<< HEAD:src/app/(app)/page.tsx
-                <CardContent className="flex flex-col gap-4">
-                    <div className="flex h-4 w-full rounded-md overflow-hidden">
-=======
                 <CardContent className="flex flex-col gap-6">
-                    {/* Segmented Status Bar */}
                     <div className="flex h-5 w-mid rounded-full overflow-hidden ">
->>>>>>> origin/master:src/app/page.tsx
                         <div
                             className="bg-green-500"
                             style={{ width: `${(vehicleStatusData.completed / vehicleStatusData.total) * 100}%` }}
