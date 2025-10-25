@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check for a token or session in localStorage on initial load
@@ -22,12 +23,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (storedAuth === 'true') {
       setIsAuthenticated(true);
     } else {
-        // If not authenticated and not on the login page, redirect
-        if (window.location.pathname !== '/login') {
+        // If not authenticated and not on a public page, redirect
+        const publicPages = ['/login', '/signup'];
+        if (!publicPages.includes(pathname)) {
             router.replace('/login');
         }
     }
-  }, [router]);
+  }, [router, pathname]);
 
 
   const login = () => {
