@@ -16,12 +16,20 @@ import { Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
+import { useState } from "react";
 
 export default function SignupPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
 
   const handleSignup = () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
     // In a real app, you would handle user creation here
     console.log("Attempting to sign up and log in...");
     // For this example, we'll just log them in directly
@@ -51,7 +59,11 @@ export default function SignupPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
