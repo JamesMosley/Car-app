@@ -1,12 +1,17 @@
-
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -19,29 +24,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for a token or session in localStorage on initial load
-    const storedAuth = localStorage.getItem('isAuthenticated');
-    if (storedAuth === 'true') {
+    const storedAuth = localStorage.getItem("isAuthenticated");
+    if (storedAuth === "true") {
       setIsAuthenticated(true);
     } else {
-        // If not authenticated and not on a public page, redirect
-        const publicPages = ['/login', '/signup'];
-        if (!publicPages.includes(pathname)) {
-            router.replace('/login');
-        }
+      // If not authenticated and not on a public page, redirect
+      const publicPages = ["/login", "/signup"];
+      if (!publicPages.includes(pathname)) {
+        router.replace("/login");
+      }
     }
   }, [router, pathname]);
 
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch("http://localhost:8000/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const login = () => {
-    localStorage.setItem('isAuthenticated', 'true');
-    setIsAuthenticated(true);
-    router.replace('/');
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("isAuthenticated", "true");
+      setIsAuthenticated(true);
+      router.replace("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("token");
     setIsAuthenticated(false);
-    router.replace('/login');
+    router.replace("/login");
   };
 
   const value = { isAuthenticated, login, logout };
@@ -52,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

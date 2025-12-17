@@ -21,19 +21,36 @@ import { useState } from "react";
 export default function SignupPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
-
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    setError('');
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
-    // In a real app, you would handle user creation here
-    console.log("Attempting to sign up and log in...");
-    // For this example, we'll just log them in directly
-    login();
+
+    try {
+      const response = await fetch('http://localhost:8000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.detail || 'Registration failed');
+      }
+
+      router.push('/login');
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -55,7 +72,14 @@ export default function SignupPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="m@example.com" required />
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="m@example.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
@@ -65,6 +89,7 @@ export default function SignupPage() {
             <Label htmlFor="confirm-password">Confirm Password</Label>
             <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button className="w-full" onClick={handleSignup}>Create Account</Button>

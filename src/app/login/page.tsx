@@ -16,7 +16,7 @@ import { Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,10 +30,17 @@ export default function LoginPage() {
   }, [isAuthenticated, router]);
 
 
-  const handleLogin = () => {
-    // In a real app, you'd validate credentials here
-    console.log("Attempting to log in...");
-    login();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setError("");
+    try {
+      await login(email, password);
+    } catch (err) {
+      setError("Invalid email or password");
+    }
   };
 
   return (
@@ -51,12 +58,26 @@ export default function LoginPage() {
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="m@example.com" required />
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="m@example.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input 
+              id="password" 
+              type="password" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button className="w-full" onClick={handleLogin}>Sign in</Button>
