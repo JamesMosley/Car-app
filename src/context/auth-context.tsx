@@ -12,6 +12,7 @@ import { useRouter, usePathname } from "next/navigation";
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: (token: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -68,7 +69,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.replace("/login");
   };
 
-  const value = { isAuthenticated, login, logout };
+  const loginWithGoogle = async (token: string) => {
+    try {
+      const response = await fetch("http://localhost:8000/google-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Google login failed");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("isAuthenticated", "true");
+      setIsAuthenticated(true);
+      router.replace("/");
+    } catch (error) {
+      console.error("Google login error:", error);
+      throw error;
+    }
+  };
+
+  const value = { isAuthenticated, login, loginWithGoogle, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

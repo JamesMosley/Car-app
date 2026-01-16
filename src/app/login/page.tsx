@@ -17,10 +17,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useEffect, useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, loginWithGoogle } = useAuth();
 
   useEffect(() => {
     // If user is already authenticated, redirect to dashboard
@@ -81,9 +82,22 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button className="w-full" onClick={handleLogin}>Sign in</Button>
-          <Button variant="outline" className="w-full" onClick={handleLogin}>
-            Sign in with Google
-          </Button>
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={async (credentialResponse) => {
+                if (credentialResponse.credential) {
+                  try {
+                    await loginWithGoogle(credentialResponse.credential);
+                  } catch (error) {
+                    setError("Google login failed");
+                  }
+                }
+              }}
+              onError={() => {
+                setError("Google login failed");
+              }}
+            />
+          </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="underline">

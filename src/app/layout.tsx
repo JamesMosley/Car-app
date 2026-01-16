@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/context/auth-context';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-            {children}
-        </AuthProvider>
+        <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+          <AuthProvider>
+              {children}
+          </AuthProvider>
+        </GoogleOAuthProvider>
         <Toaster />
       </body>
     </html>

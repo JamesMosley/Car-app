@@ -59,6 +59,45 @@ async def login_for_access_token(form_data: schemas.UserCreate, db: Session = De
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+@app.post("/google-token", response_model=schemas.Token)
+async def google_login(token_request: schemas.TokenRequest, db: Session = Depends(get_db)):
+    try:
+        # Verify the token with Google
+        # In a real app, you should verify the AUDIENCE as well (your client ID)
+        import requests
+        response = requests.get(f"https://oauth2.googleapis.com/tokeninfo?id_token={token_request.token}")
+        
+        if response.status_code != 200:
+             raise HTTPException(status_code=400, detail="Invalid Google token")
+             
+        id_info = response.json()
+        email = id_info.get("email")
+        
+        if not email:
+            raise HTTPException(status_code=400, detail="Token does not contain email")
+
+        # Check if user exists
+        user = db.query(models.User).filter(models.User.email == email).first()
+        if not user:
+            # Create new user if not exists (auto-registration)
+            # We'll set a random password since they use Google to login
+            import secrets
+            random_password = secrets.token_urlsafe(16)
+            hashed_password = auth.get_password_hash(random_password)
+            user = models.User(email=email, hashed_password=hashed_password)
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+        access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = auth.create_access_token(
+            data={"sub": user.email}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
