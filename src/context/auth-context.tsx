@@ -30,9 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
     } else {
       // If not authenticated and not on a public page, redirect
-      const publicPages = ["/login", "/signup"];
+      const publicPages = ["/signin", "/signup"];
       if (!publicPages.includes(pathname)) {
-        router.replace("/login");
+        router.replace("/signin");
       }
     }
   }, [router, pathname]);
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("token");
     setIsAuthenticated(false);
-    router.replace("/login");
+    router.replace("/signin");
   };
 
   const loginWithGoogle = async (token: string) => {

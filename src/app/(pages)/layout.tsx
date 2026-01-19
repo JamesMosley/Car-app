@@ -22,7 +22,7 @@ export default function AppLayout({
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace('/login');
+      router.replace('/signin');
     }
   }, [isAuthenticated, router]);
 

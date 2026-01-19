@@ -47,7 +47,7 @@ export default function SignupPage() {
         throw new Error(data.detail || 'Registration failed');
       }
 
-      router.push('/login');
+      router.push('/signin');
     } catch (err: any) {
       setError(err.message);
     }
@@ -95,7 +95,7 @@ export default function SignupPage() {
           <Button className="w-full" onClick={handleSignup}>Create Account</Button>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
-            <Link href="/login" className="underline">
+            <Link href="/signin" className="underline">
               Sign in
             </Link>
           </div>
