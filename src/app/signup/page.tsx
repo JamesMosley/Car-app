@@ -35,13 +35,16 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, password: password}),
-      });
+      const response = await fetch("http://localhost:8000/token", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+  body: new URLSearchParams({
+    username: email,   // IMPORTANT: must be "username"
+    password: password,
+  }),
+});
 
       if (!response.ok) {
         const data = await response.json();
