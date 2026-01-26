@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -18,19 +17,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useEffect, useState } from "react";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const router = useRouter();
   const { isAuthenticated, login, loginWithGoogle } = useAuth();
 
   useEffect(() => {
-    // If user is already authenticated, redirect to dashboard
     if (isAuthenticated) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [isAuthenticated, router]);
-
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +37,7 @@ export default function LoginPage() {
     setError("");
     try {
       await login(email, password);
-    } catch (err) {
+    } catch {
       setError("Invalid email or password");
     }
   };
@@ -49,57 +46,52 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-secondary">
       <Card className="w-full max-w-sm shadow-xl">
         <CardHeader className="text-center">
-            <div className="flex justify-center items-center gap-2 mb-4">
-               <Wrench className="w-8 h-8 text-primary" />
-               <CardTitle className="text-3xl font-bold text-primary">GarageHub</CardTitle>
-            </div>
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <Wrench className="w-8 h-8 text-primary" />
+            <CardTitle className="text-3xl font-bold text-primary">
+              GarageHub
+            </CardTitle>
+          </div>
           <CardDescription>
             Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
+
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="m@example.com" 
-              required 
+            <Label>Email</Label>
+            <Input
+              type="email"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <PasswordInput 
-              id="password" 
-              required 
+            <Label>Password</Label>
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           {error && <p className="text-red-500 text-sm">{error}</p>}
         </CardContent>
+
         <CardFooter className="flex flex-col gap-4">
-          <Button className="w-full" onClick={handleLogin}>Sign in</Button>
-          <div className="flex justify-center w-full">
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                if (credentialResponse.credential) {
-                  try {
-                    await loginWithGoogle(credentialResponse.credential);
-                  } catch (error) {
-                    setError("Google login failed");
-                  }
-                }
-              }}
-              onError={() => {
-                setError("Google login failed");
-              }}
-            />
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
+          <Button className="w-full" onClick={handleLogin}>
+            Sign in
+          </Button>
+
+          <GoogleLogin
+            onSuccess={(res) =>
+              res.credential && loginWithGoogle(res.credential)
+            }
+            onError={() => setError("Google login failed")}
+          />
+
+          <div className="text-sm text-center">
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="underline">
               Sign up
             </Link>
