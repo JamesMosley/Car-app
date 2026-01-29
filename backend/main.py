@@ -63,7 +63,7 @@ def signup(
 # Login
 # =========================================================
 
-@app.post("/login", response_model=schemas.Token)
+@app.post("/token", response_model=schemas.Token)
 def login(
     user: schemas.UserLogin,
     db: Session = Depends(get_db),
