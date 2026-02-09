@@ -16,7 +16,7 @@ type Payment = {
   invoiceId: string;
   amount: number | string;
   date: string;
-  method: 'Credit Card' | 'Bank Transfer' | 'Check' | 'Cash' | 'Other' | string;
+  method: 'Credit Card' | 'Bank Transfer' | 'Check' | 'Cash' | 'Other' | 'Mpesa' |string;
 };
 
 const initialPayments: Payment[] = [
@@ -147,6 +147,7 @@ export default function PaymentsPage() {
                 <SelectItem value="Check">Check</SelectItem>
                 <SelectItem value="Cash">Cash</SelectItem>
                 <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="Mpesa">Mpesa</SelectItem>
               </SelectContent>
             </Select>
           </div>
