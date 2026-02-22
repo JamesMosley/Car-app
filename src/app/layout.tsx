@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/context/auth-context';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ChatBot from '@/components/ChatBot';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
               {children}
           </AuthProvider>
         </GoogleOAuthProvider>
+        <ChatBot />
         <Toaster />
       </body>
     </html>
