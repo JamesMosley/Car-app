@@ -2,9 +2,12 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import timedelta
+from dotenv import load_dotenv
 
-import models, schemas, crud, auth
+import models, schemas, crud, auth, payment_router
 from database import engine, get_db
+
+load_dotenv()
 
 # =========================================================
 # Database
@@ -20,6 +23,8 @@ app = FastAPI(
     title="Auth API",
     version="1.0.0",
 )
+
+app.include_router(payment_router.router)
 
 # =========================================================
 # CORS (DEV MODE)

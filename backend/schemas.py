@@ -23,6 +23,25 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     
-class TokenRequest(BaseModel):
-    email: EmailStr
     password: str
+
+# ---------- PAYMENT SCHEMAS ----------
+
+class PaymentCreate(BaseModel):
+    amount: int
+    currency: str = "KES"
+    method: str
+    phone_number: str | None = None
+
+class MpesaPaymentRequest(BaseModel):
+    amount: int
+    phone_number: str # Format: 2547XXXXXXXX
+
+class StripePaymentRequest(BaseModel):
+    amount: int
+    currency: str = "usd"
+
+class PaymentResponse(BaseModel):
+    id: int
+    status: str
+    message: str

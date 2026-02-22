@@ -10,6 +10,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { CreditCard, PlusCircle, Eye, Trash2, Search } from 'lucide-react';
+import { PaymentModal } from '@/components/PaymentModal';
 
 type Payment = {
   id: string;
@@ -39,6 +40,7 @@ export default function PaymentsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
 
   const handleAddInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,8 +155,17 @@ export default function PaymentsPage() {
             </Select>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="ml-auto" onClick={handleRecordPayment}>
+        <CardFooter className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => {
+            if (!addFormState.amount || !addFormState.invoiceId) {
+              alert('Please enter Invoice ID and Amount first to initiate payment.');
+              return;
+            }
+            setIsPaymentModalOpen(true);
+          }}>
+            Initiate Online Payment
+          </Button>
+          <Button onClick={handleRecordPayment}>
             <PlusCircle className="mr-2 h-4 w-4" /> Save Payment
           </Button>
         </CardFooter>
@@ -257,10 +268,30 @@ export default function PaymentsPage() {
               <DialogClose asChild>
                 <Button>Close</Button>
               </DialogClose>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Online Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        amount={Number(addFormState.amount) || 0}
+        onSuccess={(method) => {
+          setAddFormState(prev => ({ ...prev, method: method }));
+          // Automatically record payment upon successful online transaction
+          const newPayment: Payment = {
+            id: `PAY${Date.now()}`,
+            invoiceId: addFormState.invoiceId,
+            amount: Number(addFormState.amount),
+            date: new Date().toISOString().split('T')[0],
+            method: method,
+          };
+          setPayments(prev => [newPayment, ...prev]);
+          setAddFormState({ invoiceId: '', amount: '', date: '', method: '' });
+          setCurrentPage(1);
+        }}
+      />
     </div>
   );
 }
