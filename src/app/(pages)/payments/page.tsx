@@ -268,6 +268,7 @@ export default function PaymentsPage() {
               <DialogClose asChild>
                 <Button>Close</Button>
               </DialogClose>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
