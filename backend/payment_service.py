@@ -16,9 +16,13 @@ class MpesaService:
         
         try:
             r = requests.get(api_url, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+            r.raise_for_status() # Raise exception for 4XX/5XX responses
             return r.json().get("access_token")
         except Exception as e:
             print("Error getting M-Pesa token:", e)
+            if 'r' in locals():
+                print(f"Response status: {r.status_code}")
+                print(f"Response text: {r.text}")
             return None
 
     @staticmethod
