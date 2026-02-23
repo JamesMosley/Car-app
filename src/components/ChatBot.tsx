@@ -61,7 +61,7 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+    <div className="fixed bottom-12 right-4 z-50 flex flex-col items-end">
       {/* Search Window */}
       {isOpen && (
         <Card className="w-80 sm:w-96 shadow-xl border border-border mb-4 overflow-hidden animate-in slide-in-from-bottom-5 fade-in-0 duration-300">
