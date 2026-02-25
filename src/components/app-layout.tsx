@@ -4,7 +4,7 @@
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import AppPages from '@/app/(pages)/layout';
-import LoginPage from '@/app/login/page';
+import LoginPage from '@/app/signin/page';
 
 export default function AppLayout({
   children,
