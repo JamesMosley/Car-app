@@ -1,0 +1,38 @@
+﻿
+> nextn@0.1.0 build
+> next build
+
+   Γû▓ Next.js 15.5.12
+
+   Creating an optimized production build ...
+node.exe : Failed to 
+compile.
+At C:\Users\Administrat
+or\AppData\Roaming\npm\
+npm.ps1:24 char:5
++     & "node$exe"  "$b
+asedir/node_modules/npm
+/bin/npm-cli.js" $args
++     ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Failed to com   
+ pile.:String) [],     
+RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+
+Error: EISDIR: illegal 
+operation on a 
+directory, readlink 'E:
+\Stuff\Car-app\node_mod
+ules\next\dist\pages\_a
+pp.js'
+
+
+> Build failed because 
+of webpack errors

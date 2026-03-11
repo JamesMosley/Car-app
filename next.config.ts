@@ -5,13 +5,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // ✅ FIX: Prevent EISDIR readlink error on Windows
-  outputFileTracing: false,
-
-  webpack: (config) => {
-    config.resolve.symlinks = false;
-    return config;
-  },
 
   images: {
     remotePatterns: [
