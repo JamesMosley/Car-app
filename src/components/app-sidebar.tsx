@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  House, // Changed from LayoutDashboard
+  House, 
   Truck,
   FileText,
   Archive,
