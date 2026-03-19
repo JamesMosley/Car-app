@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -12,24 +12,49 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/auth-context';
 
+// Helper function to get initials from name
+function getInitials(name: string): string {
+  if (!name) return '';
+  const parts = name.split(' ');
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.charAt(0).toUpperCase();
+}
+
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const router = useRouter();
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace('/signin');
     }
+    // Try to get user from localStorage if not available from context
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+    }
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    if (user) {
+      setUserName(user.name);
+    }
+  }, [user]);
 
   if (!isAuthenticated) {
     // You can render a loading spinner or null here while redirecting
     return null;
   }
+
+  // Get initials from user name
+  const initials = getInitials(userName);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -55,9 +80,9 @@ export default function AppLayout({
             </Button>
             <div className="flex items-center space-x-2">
               <Avatar className="h-8 w-8">
-                <AvatarFallback>JM</AvatarFallback>
+                <AvatarFallback>{initials || 'U'}</AvatarFallback>
               </Avatar>
-              <span className="hidden text-sm font-medium sm:block">James Mosley</span>
+              <span className="hidden text-sm font-medium sm:block">{userName || 'User'}</span>
             </div>
              <Button variant="outline" size="sm" onClick={logout}>Logout</Button>
           </div>

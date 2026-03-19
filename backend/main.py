@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 import models, schemas, crud, auth, payment_router
 from database import engine, get_db
+from auth import get_current_user
 
 load_dotenv()
 
@@ -96,3 +97,11 @@ def login(
         "access_token": access_token,
         "token_type": "bearer",
     }
+
+# =========================================================
+# Get Current User
+# =========================================================
+
+@app.get("/me")
+def get_current_user_info(current_user: str = Depends(get_current_user)):
+    return {"email": current_user}
