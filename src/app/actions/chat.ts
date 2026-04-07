@@ -5,7 +5,10 @@ import { ai } from '@/ai/ai-instance';
 export async function generateChatResponse(messages: {role: 'user' | 'model', content: string}[]) {
   try {
     // Map the simple messages format to the format expected by Genkit
-    const genkitMessages = messages.map(msg => ({
+    // Find the first user message to start from (Gemini requires first msg to be user)
+    const firstUserIndex = messages.findIndex(m => m.role === 'user');
+    const relevantMessages = firstUserIndex >= 0 ? messages.slice(firstUserIndex) : messages;
+    const genkitMessages = relevantMessages.map(msg => ({
       role: msg.role === 'model' ? 'model' as const : 'user' as const,
       content: [{ text: msg.content }]
     }));
