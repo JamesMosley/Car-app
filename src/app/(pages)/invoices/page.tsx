@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,25 +23,54 @@ type Invoice = {
   status: 'Paid' | 'Pending' | 'Overdue' | string; 
 };
 
-const initialInvoices: Invoice[] = [
-  { id: 'INV001', client: 'Acme Corp', amount: 1200.50, date: '2024-07-15', dueDate: '2024-08-15', description: 'Web Development Services', status: 'Paid' },
-  { id: 'INV002', client: 'Globex Inc', amount: 850.00, date: '2024-07-20', dueDate: '2024-08-20', description: 'Consulting Hours', status: 'Pending' },
-  { id: 'INV003', client: 'Stark Industries', amount: 2500.75, date: '2024-07-22', dueDate: '2024-08-01', description: 'Hardware Supplies', status: 'Overdue' },
-  { id: 'INV004', client: 'Wayne Enterprises', amount: 1500.00, date: '2024-06-10', dueDate: '2024-07-10', description: 'Security System Upgrade', status: 'Paid' },
-  { id: 'INV005', client: 'Cyberdyne Systems', amount: 3200.00, date: '2024-06-25', dueDate: '2024-07-25', description: 'AI Model Training', status: 'Pending' },
-  { id: 'INV006', client: 'Ollivanders Wand Shop', amount: 75.50, date: '2024-05-30', dueDate: '2024-06-15', description: 'Unicorn Hair Restock', status: 'Overdue' },
-  { id: 'INV007', client: 'Soylent Corp', amount: 999.99, date: '2024-07-01', dueDate: '2024-07-31', description: 'Food Product Delivery', status: 'Pending' },
-  { id: 'INV008', client: 'Pied Piper', amount: 5000.00, date: '2024-07-10', dueDate: '2024-08-10', description: 'Compression Algorithm License', status: 'Paid' },
-  { id: 'INV009', client: 'Stark Industries', amount: 1800.00, date: '2024-08-01', dueDate: '2024-09-01', description: 'Arc Reactor Maintenance', status: 'Pending' },
-  { id: 'INV010', client: 'Gekko & Co', amount: 10000.00, date: '2024-06-01', dueDate: '2024-07-01', description: 'Financial Consulting', status: 'Overdue' },
-  { id: 'INV011', client: 'Acme Corp', amount: 750.25, date: '2024-08-05', dueDate: '2024-09-05', description: 'Cloud Hosting Services', status: 'Pending' },
-  { id: 'INV012', client: 'Globex Inc', amount: 220.00, date: '2024-08-10', dueDate: '2024-09-10', description: 'Gadget Prototypes', status: 'Paid' },
-];
+const getUserStorageKey = (prefix: string) => {
+  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+  return userEmail ? `${prefix}_${userEmail}` : null;
+};
+
+const loadUserData = <T,>(key: string, defaultData: T[]): T[] => {
+  if (typeof window === 'undefined') return defaultData;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return defaultData;
+    }
+  }
+  return defaultData;
+};
+
+const saveUserData = <T,>(key: string, data: T[]) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+};
+
+const initialInvoices: Invoice[] = [];
 
 const ITEMS_PER_PAGE = 5;
 
 export default function InvoicesPage() {
-  const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const storageKey = getUserStorageKey('invoices');
+    if (storageKey) {
+      setInvoices(loadUserData(storageKey, []));
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      const storageKey = getUserStorageKey('invoices');
+      if (storageKey) {
+        saveUserData(storageKey, invoices);
+      }
+    }
+  }, [invoices, isLoaded]);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentItemToView, setCurrentItemToView] = useState<Invoice | null>(null);

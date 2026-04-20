@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,30 +13,59 @@ import { Archive, PlusCircle, Edit, Trash2, Search } from 'lucide-react';
 type InventoryItem = {
   id: string;
   name: string;
-  quantity: number | string; // Allow string for input, convert to number on save
+  quantity: number | string;
   location: string;
   sku?: string;
 };
 
-const initialInventoryItems: InventoryItem[] = [
-  { id: 'P001', name: 'Oil Filter', quantity: 50, location: 'Shelf A1', sku: 'OF-1023' },
-  { id: 'P002', name: 'Brake Pads (Set)', quantity: 25, location: 'Bin B3', sku: 'BP-4050' },
-  { id: 'P003', name: 'Headlight Bulb', quantity: 100, location: 'Shelf A2', sku: 'HB-H4' },
-  { id: 'P004', name: 'Spark Plugs (4x)', quantity: 75, location: 'Shelf C1', sku: 'SP-004X' },
-  { id: 'P005', name: 'Air Filter', quantity: 40, location: 'Shelf A1', sku: 'AF-1055' },
-  { id: 'P006', name: 'Wiper Blades (Pair)', quantity: 60, location: 'Bin D2', sku: 'WB-2224' },
-  { id: 'P007', name: 'Battery (Group 35)', quantity: 15, location: 'Shelf B2', sku: 'BAT-G35' },
-  { id: 'P008', name: 'Coolant (Gallon)', quantity: 30, location: 'Storage Area 1', sku: 'CLT-GL' },
-  { id: 'P009', name: 'Brake Fluid (DOT4)', quantity: 20, location: 'Storage Area 1', sku: 'BF-DT4' },
-  { id: 'P010', name: 'Tire Pressure Gauge', quantity: 10, location: 'Tool Cabinet', sku: 'TPG-001' },
-  { id: 'P011', name: 'Transmission Fluid (ATF)', quantity: 22, location: 'Shelf C2', sku: 'TF-ATF' },
-  { id: 'P012', name: 'Power Steering Fluid', quantity: 18, location: 'Shelf C2', sku: 'PSF-01' },
-];
+const getUserStorageKey = (prefix: string) => {
+  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+  return userEmail ? `${prefix}_${userEmail}` : null;
+};
+
+const loadUserData = <T,>(key: string, defaultData: T[]): T[] => {
+  if (typeof window === 'undefined') return defaultData;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return defaultData;
+    }
+  }
+  return defaultData;
+};
+
+const saveUserData = <T,>(key: string, data: T[]) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+};
+
+const initialInventoryItems: InventoryItem[] = [];
 
 const ITEMS_PER_PAGE = 5;
 
 export default function InventoryPage() {
-  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const storageKey = getUserStorageKey('inventory');
+    if (storageKey) {
+      setInventoryItems(loadUserData(storageKey, []));
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      const storageKey = getUserStorageKey('inventory');
+      if (storageKey) {
+        saveUserData(storageKey, inventoryItems);
+      }
+    }
+  }, [inventoryItems, isLoaded]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentItemToEdit, setCurrentItemToEdit] = useState<InventoryItem | null>(null);
   const [editFormState, setEditFormState] = useState<Omit<InventoryItem, 'id'>>({ name: '', quantity: '', location: '', sku: '' });

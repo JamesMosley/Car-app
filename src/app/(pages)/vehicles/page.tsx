@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,25 +20,54 @@ type Vehicle = {
   status: 'Active' | 'Maintenance' | 'Inactive' | string;
 };
 
-const initialVehicles: Vehicle[] = [
-  { id: 'V001', make: 'Ford', model: 'Transit', year: 2022, vin: '1FTRECHARGEEXPRESSA', status: 'Active' },
-  { id: 'V002', make: 'Mercedes', model: 'Sprinter', year: 2021, vin: 'WDBRECHARGEEXPRESSB', status: 'Maintenance' },
-  { id: 'V003', make: 'Chevrolet', model: 'Express', year: 2023, vin: '1GCGSRECHARGEEXPRESSC', status: 'Active' },
-  { id: 'V004', make: 'RAM', model: 'ProMaster', year: 2022, vin: 'RAMPROMASTEREXPRESSD', status: 'Inactive' },
-  { id: 'V005', make: 'Ford', model: 'E-Transit', year: 2023, vin: '1FTETRANSITEEXPRESSE', status: 'Active' },
-  { id: 'V006', make: 'Nissan', model: 'NV200', year: 2020, vin: 'NISSANNV200EXPRESSF', status: 'Maintenance' },
-  { id: 'V007', make: 'GMC', model: 'Savana', year: 2022, vin: 'GMCSAVANAEXPRESSG', status: 'Active' },
-  { id: 'V008', make: 'Ford', model: 'Transit Connect', year: 2021, vin: '1FTCONNECTEXPRESSH', status: 'Inactive' },
-  { id: 'V009', make: 'Mercedes', model: 'Metris', year: 2023, vin: 'WDBMETRISEXPRESSI', status: 'Active' },
-  { id: 'V010', make: 'Chevrolet', model: 'City Express', year: 2019, vin: '1GCCITYEXPRESSJ', status: 'Maintenance' },
-  { id: 'V011', make: 'Toyota', model: 'HiAce', year: 2022, vin: 'TOYHIACEEXPRESSK', status: 'Active' },
-  { id: 'V012', make: 'Volkswagen', model: 'Crafter', year: 2023, vin: 'VWCRAFTEREXPRESSL', status: 'Maintenance' },
-];
+const getUserStorageKey = (prefix: string) => {
+  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+  return userEmail ? `${prefix}_${userEmail}` : null;
+};
+
+const loadUserData = <T,>(key: string, defaultData: T[]): T[] => {
+  if (typeof window === 'undefined') return defaultData;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return defaultData;
+    }
+  }
+  return defaultData;
+};
+
+const saveUserData = <T,>(key: string, data: T[]) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+};
+
+const initialVehicles: Vehicle[] = [];
 
 const ITEMS_PER_PAGE = 10;
 
 export default function VehiclesPage() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(initialVehicles);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const storageKey = getUserStorageKey('vehicles');
+    if (storageKey) {
+      setVehicles(loadUserData(storageKey, []));
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      const storageKey = getUserStorageKey('vehicles');
+      if (storageKey) {
+        saveUserData(storageKey, vehicles);
+      }
+    }
+  }, [vehicles, isLoaded]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentItemToEdit, setCurrentItemToEdit] = useState<Vehicle | null>(null);
   const [editFormState, setEditFormState] = useState<Omit<Vehicle, 'id'>>({ make: '', model: '', year: '', vin: '', status: 'Active' });
